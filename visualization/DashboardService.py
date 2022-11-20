@@ -31,7 +31,6 @@ class DashboardService:
                     options=[{'label': key, 'value': value} for key, value in figure_mapping.items()])
             ]),
             dcc.Graph(id='main-graph'),
-            trace_updater.TraceUpdater(id="trace-updater", gdID="main-graph", sequentialUpdate=False)
         ])
 
         # Define callback to update graph
@@ -45,4 +44,4 @@ class DashboardService:
 
     def show_dashboard(self):
         # Run app and display result inline in the notebook
-        self._app.run_server(debug=True, mode='inline')
+        self._app.run_server(debug=True, mode='inline', height=750)
