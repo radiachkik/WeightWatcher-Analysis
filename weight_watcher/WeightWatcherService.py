@@ -1,8 +1,10 @@
 import logging
 from typing import List
+
+import pandas
 import weightwatcher as ww
 
-from .WeightWatcherResult import WeightWatcherResult, WeightWatcherSummary
+from .WeightWatcherResult import WeightWatcherResult
 from models import ModelWrapperBase
 
 
@@ -25,6 +27,6 @@ class WeightWatcherService:
 
     def _get_details_and_summary(self, model_wrapper: ModelWrapperBase) -> WeightWatcherResult:
         details = self._weight_watcher.analyze(model=model_wrapper.model)
-        summary = WeightWatcherSummary(**self._weight_watcher.get_summary(details))
+        summary = pandas.DataFrame(self._weight_watcher.get_summary(details))
         return WeightWatcherResult(model_wrapper.identification, model_wrapper.top_1_accuracy, summary, details)
 

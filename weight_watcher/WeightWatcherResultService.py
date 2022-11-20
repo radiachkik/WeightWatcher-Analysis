@@ -4,8 +4,9 @@ from dataclasses import asdict
 from typing import List, Dict, Any
 
 import pandas
+from pandas import DataFrame
 
-from .WeightWatcherResult import WeightWatcherResult, WeightWatcherSummary
+from .WeightWatcherResult import WeightWatcherResult, WeightWatcherSummaryColumns, WeightWatcherDetailsColumns
 from models import ModelIdentification, ModelService, ModelArchitecture
 
 
@@ -28,11 +29,17 @@ class WeightWatcherResultService:
         base_path = self._get_results_base_path(model_identification)
         try:
             details = pandas.read_csv(os.path.join(base_path, "details.csv"))
-            with open(os.path.join(base_path, "summary.json")) as summary_file:
-                summary = WeightWatcherSummary(**json.load(summary_file))
+            summary = pandas.read_json(os.path.join(base_path, "summary.json"), orient="index").transpose()
         except FileNotFoundError:
             raise ValueError()
         model_wrapper = ModelService.get(model_identification)
+        summary[WeightWatcherSummaryColumns.ACCURACY.value] = model_wrapper.top_1_accuracy
+        summary[WeightWatcherSummaryColumns.ARCHITECTURE.value] = model_identification.architecture.name
+        summary[WeightWatcherSummaryColumns.VARIANT.value] = model_identification.variant.name
+
+        details[WeightWatcherDetailsColumns.ACCURACY.value] = model_wrapper.top_1_accuracy
+        details[WeightWatcherDetailsColumns.ARCHITECTURE.value] = model_identification.architecture.name
+        details[WeightWatcherDetailsColumns.VARIANT.value] = model_identification.variant.name
         return WeightWatcherResult(model_identification, model_wrapper.top_1_accuracy, summary, details)
 
     def load_all(self) -> List[WeightWatcherResult]:
@@ -60,25 +67,3 @@ class WeightWatcherResultService:
             model_identification.variant.name
         )
         return base_path
-
-    @staticmethod
-    def extract_summary_metrics(analysis_results: List[WeightWatcherResult]) -> Dict[str, Any]:
-        metrics = dict()
-        for result in analysis_results:
-            result_dict = asdict(result.summary)
-            for key in result_dict:
-                if key not in metrics:
-                    metrics[key] = []
-                metrics[key].append(result_dict[key])
-        return metrics
-
-    @staticmethod
-    def extract_details_metrics(analysis_results: List[WeightWatcherResult]) -> Dict[str, Any]:
-        metrics = dict()
-        for result in analysis_results:
-            result_dict = asdict(result.summary)
-            for key in result_dict:
-                if key not in metrics:
-                    metrics[key] = []
-                metrics[key].append(result_dict[key])
-        return metrics

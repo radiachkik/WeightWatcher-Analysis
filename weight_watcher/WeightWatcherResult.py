@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Union
 
-from pandas import DataFrame, Series
+from pandas import DataFrame
 
 from models import ModelIdentification
 
 
 class WeightWatcherDetailsColumns(Enum):
+    ACCURACY = "accuracy"
+    ARCHITECTURE = "architecture"
+    VARIANT = "variant"
     LAYER_ID = "layer_id"
     NAME = "name"
     D = "D"
@@ -42,19 +44,21 @@ class WeightWatcherDetailsColumns(Enum):
     XMIN = "xmin"
 
 
-@dataclass
-class WeightWatcherSummary:
-    log_norm: float
-    alpha: float
-    alpha_weighted: float
-    log_alpha_norm: float
-    log_spectral_norm: float
-    stable_rank: float
+class WeightWatcherSummaryColumns(Enum):
+    ACCURACY = "accuracy"
+    ARCHITECTURE = "architecture"
+    VARIANT = "variant"
+    LOG_NORM = "log_norm"
+    ALPHA = "alpha"
+    ALPHA_WEIGHTED = "alpha_weighted"
+    LOG_ALPHA_NORM = "log_alpha_norm"
+    LOG_SPECTRAL_NORM = "log_spectral_norm"
+    STABLE_RANK = "stable_rank"
 
 
 @dataclass
 class WeightWatcherResult:
     model_identification: ModelIdentification
     model_accuracy: float
-    summary: WeightWatcherSummary
+    summary: DataFrame
     details: DataFrame

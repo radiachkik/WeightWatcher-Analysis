@@ -5,9 +5,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash import Input, Output
 import plotly.graph_objects as go
-from plotly_resampler import register_plotly_resampler
-
-register_plotly_resampler(mode="auto")
 
 
 class DashboardService:
@@ -20,7 +17,7 @@ class DashboardService:
         self._figures = figures
         figure_mapping = {figure.layout.title.text: index for index, figure in enumerate(self._figures)}
         self._app.layout = html.Div([
-            html.H1("Result correlation with accuracy"),
+            html.H1("Visual analysis"),
             html.Label([
                 "plot",
                 dcc.Dropdown(
@@ -41,6 +38,6 @@ class DashboardService:
             self._active_figure = self._figures[figure_title]
             return self._active_figure
 
-    def show_dashboard(self):
+    def show_dashboard(self, external: bool = False):
         # Run app and display result inline in the notebook
-        self._app.run_server(debug=True, mode='inline', height=750)
+        self._app.run_server(debug=True, mode='external' if external else "internal", height=750)
