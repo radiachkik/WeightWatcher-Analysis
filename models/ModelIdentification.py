@@ -19,3 +19,6 @@ class ModelVariant(Enum):
 class ModelIdentification:
     architecture: ModelArchitecture
     variant: ModelVariant
+
+    def __str__(self):
+        return f"{self.architecture.name}:{self.variant.name}"

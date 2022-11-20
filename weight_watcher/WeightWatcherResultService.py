@@ -1,6 +1,7 @@
 import json
 import os.path
-from typing import List
+from dataclasses import asdict
+from typing import List, Dict, Any
 
 import pandas
 
@@ -59,3 +60,25 @@ class WeightWatcherResultService:
             model_identification.variant.name
         )
         return base_path
+
+    @staticmethod
+    def extract_summary_metrics(analysis_results: List[WeightWatcherResult]) -> Dict[str, Any]:
+        metrics = dict()
+        for result in analysis_results:
+            result_dict = asdict(result.summary)
+            for key in result_dict:
+                if key not in metrics:
+                    metrics[key] = []
+                metrics[key].append(result_dict[key])
+        return metrics
+
+    @staticmethod
+    def extract_details_metrics(analysis_results: List[WeightWatcherResult]) -> Dict[str, Any]:
+        metrics = dict()
+        for result in analysis_results:
+            result_dict = asdict(result.summary)
+            for key in result_dict:
+                if key not in metrics:
+                    metrics[key] = []
+                metrics[key].append(result_dict[key])
+        return metrics

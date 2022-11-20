@@ -1,3 +1,3 @@
 from .WeightWatcherService import WeightWatcherService
-from .WeightWatcherResult import WeightWatcherResult, WeightWatcherSummary, WeightWatcherDetails
+from .WeightWatcherResult import WeightWatcherResult, WeightWatcherSummary, WeightWatcherDetailsColumns
 from .WeightWatcherResultService import WeightWatcherResultService
