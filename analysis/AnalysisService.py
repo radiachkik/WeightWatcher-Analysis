@@ -12,9 +12,13 @@ from weight_watcher import WeightWatcherResult
 
 class AnalysisService:
     @staticmethod
-    def plot_accuracy_correlation(analysis_results: List[WeightWatcherResult]):
+    def plot_accuracy_correlation(analysis_results: List[WeightWatcherResult],
+                                  figure_title: str = "Correlation with accuracy"):
         metrics = AnalysisService._extract_summary_metrics(analysis_results)
         accuracies = [result.model_accuracy for result in analysis_results]
+        identifications = [result.model_identification for result in analysis_results]
+        names = [f"{identification.architecture.name}/{identification.variant.name}" for identification in
+                 identifications]
 
         fig = make_subplots(rows=2, cols=3)
         for index, key in enumerate(metrics):
@@ -23,11 +27,16 @@ class AnalysisService:
             fig.add_trace(go.Scatter(
                 x=metrics[key],
                 y=accuracies,
-                mode="markers",
+                text=names,
+                mode="markers+text",
+                marker=dict(
+                    size=10
+                ),
             ), row=row, col=col)
             fig.update_xaxes(title_text=key, row=row, col=col)
         fig.update_yaxes(title_text="accuracy")
-        fig.update_layout(title_text="Correlation with accuracy")
+        fig.update_layout(title_text=figure_title)
+        fig.update_traces(textposition='top center')
         fig.show()
 
     @staticmethod

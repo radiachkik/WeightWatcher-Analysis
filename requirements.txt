@@ -7,3 +7,4 @@ efficientnet~=1.1.1
 plotly~=5.11.0
 numpy~=1.23.4
 statsmodels
+chart_studio

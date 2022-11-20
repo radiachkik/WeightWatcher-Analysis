@@ -8,7 +8,7 @@ from .WeightWatcherResult import WeightWatcherResult, WeightWatcherSummary
 from models import ModelIdentification, ModelService, ModelArchitecture
 
 
-class AnalysisResultService:
+class WeightWatcherResultService:
     def __init__(self, results_base_path: str):
         self._results_base_path = results_base_path
 
