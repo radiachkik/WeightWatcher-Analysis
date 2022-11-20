@@ -1,11 +1,12 @@
 from enum import auto
-from typing import Dict
+from typing import Dict, Optional
 
 import tensorflow as tf
 from keras.applications.regnet import RegNet
 
-from models.ModelArchitecture import ModelArchitecture
-from models.ModelWrapperBase import ModelWrapperBase, ModelVariant
+from . import ResNetRS
+from .ModelIdentification import ModelArchitecture
+from .ModelWrapperBase import ModelWrapperBase, ModelVariant
 
 
 class RegNetXVariant(ModelVariant):
@@ -42,12 +43,13 @@ RegNetXTop1Accuracy: Dict[ModelVariant, float] = {
 class RegNetXWrapper(ModelWrapperBase):
     def __init__(self, variant: RegNetXVariant):
         super().__init__(variant)
-        model_module = tf.keras.applications
-        constructor = getattr(model_module, "RegNet" + variant.name)
-        self._model: RegNet = constructor(include_top=False, include_preprocessing=False, weights="imagenet")
+        self._model_constructor = getattr(tf.keras.applications, "RegNet" + variant.name)
+        self._model: Optional[RegNet] = None
 
     @property
     def model(self) -> tf.keras.Model:
+        if self._model is None:
+            self._model = self._model_constructor(include_top=False, include_preprocessing=False, weights="imagenet")
         return self._model
 
     @property

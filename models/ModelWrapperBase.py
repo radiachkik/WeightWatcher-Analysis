@@ -1,12 +1,7 @@
-from enum import Enum
 from abc import ABC, abstractmethod
 import tensorflow as tf
 
-from models.ModelArchitecture import ModelArchitecture
-
-
-class ModelVariant(Enum):
-    pass
+from .ModelIdentification import ModelArchitecture, ModelVariant, ModelIdentification
 
 
 class ModelWrapperBase(ABC):
@@ -16,6 +11,10 @@ class ModelWrapperBase(ABC):
     @property
     def variant(self) -> ModelVariant:
         return self._variant
+
+    @property
+    def identification(self) -> ModelIdentification:
+        return ModelIdentification(self.architecture, self.variant)
 
     @property
     @abstractmethod

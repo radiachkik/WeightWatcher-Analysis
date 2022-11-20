@@ -1,11 +1,11 @@
 from enum import auto
-from typing import Dict
+from typing import Dict, Optional
 
 import tensorflow as tf
-from keras.applications.resnet_rs import ResNetRS
+from keras.applications.convnext import ConvNeXt
 
-from models.ModelArchitecture import ModelArchitecture
-from models.ModelWrapperBase import ModelWrapperBase, ModelVariant
+from .ModelIdentification import ModelArchitecture
+from .ModelWrapperBase import ModelWrapperBase, ModelVariant
 
 
 class ConvNeXtVariant(ModelVariant):
@@ -28,12 +28,13 @@ ConvNeXtTop1Accuracy: Dict[ModelVariant, float] = {
 class ConvNeXtWrapper(ModelWrapperBase):
     def __init__(self, variant: ConvNeXtVariant):
         super().__init__(variant)
-        model_module = tf.keras.applications
-        constructor = getattr(model_module, "ConvNeXt" + variant.name)
-        self._model: ResNetRS = constructor(include_top=False, include_preprocessing=False, weights="imagenet")
+        self._model_constructor = getattr(tf.keras.applications, "ConvNeXt" + variant.name)
+        self._model: Optional[ConvNeXt] = None
 
     @property
     def model(self) -> tf.keras.Model:
+        if self._model is None:
+            self._model = self._model_constructor(include_top=False, include_preprocessing=False, weights="imagenet")
         return self._model
 
     @property

@@ -1,10 +1,10 @@
 from enum import auto
 import tensorflow as tf
 from keras.applications.resnet_rs import ResNetRS
-from typing import Dict
+from typing import Dict, Optional
 
-from models.ModelArchitecture import ModelArchitecture
-from models.ModelWrapperBase import ModelWrapperBase, ModelVariant
+from .ModelIdentification import ModelArchitecture
+from .ModelWrapperBase import ModelWrapperBase, ModelVariant
 
 
 class ResNetRSVariant(ModelVariant):
@@ -31,12 +31,13 @@ ResNetRSTop1Accuracy: Dict[ModelVariant, float] = {
 class ResNetRSWrapper(ModelWrapperBase):
     def __init__(self, variant: ResNetRSVariant):
         super().__init__(variant)
-        model_module = tf.keras.applications
-        constructor = getattr(model_module, "ResNet" + variant.name)
-        self._model: ResNetRS = constructor(include_top=False, include_preprocessing=False, weights="imagenet")
+        self._model_constructor = getattr(tf.keras.applications, "ResNet" + variant.name)
+        self._model: Optional[ResNetRS] = None
 
     @property
     def model(self) -> tf.keras.Model:
+        if self._model is None:
+            self._model = self._model_constructor(include_top=False, include_preprocessing=False, weights="imagenet")
         return self._model
 
     @property

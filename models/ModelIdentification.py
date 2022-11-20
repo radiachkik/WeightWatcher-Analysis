@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum, auto
 
 
@@ -8,3 +9,13 @@ class ModelArchitecture(Enum):
     RegNetX = auto()
     RegNetY = auto()
     ResNetRS = auto()
+
+
+class ModelVariant(Enum):
+    pass
+
+
+@dataclass
+class ModelIdentification:
+    architecture: ModelArchitecture
+    variant: ModelVariant

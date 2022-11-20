@@ -1,11 +1,11 @@
 from enum import auto
-from typing import Dict
+from typing import Dict, Optional
 
 import tensorflow as tf
 from keras.applications.efficientnet import EfficientNet
 
-from models.ModelArchitecture import ModelArchitecture
-from models.ModelWrapperBase import ModelWrapperBase, ModelVariant
+from .ModelIdentification import ModelArchitecture
+from .ModelWrapperBase import ModelWrapperBase, ModelVariant
 
 
 class EfficientNetVariant(ModelVariant):
@@ -34,12 +34,13 @@ EfficientNetTop1Accuracy: Dict[ModelVariant, float] = {
 class EfficientNetWrapper(ModelWrapperBase):
     def __init__(self, variant: EfficientNetVariant):
         super().__init__(variant)
-        model_module = tf.keras.applications
-        constructor = getattr(model_module, "EfficientNet" + variant.name)
-        self._model: EfficientNet = constructor(include_top=False, weights="imagenet")
+        self._model_constructor = getattr(tf.keras.applications, "EfficientNet" + variant.name)
+        self._model: Optional[EfficientNet] = None
 
     @property
     def model(self) -> tf.keras.Model:
+        if self._model is None:
+            self._model = self._model_constructor(include_top=False, weights="imagenet")
         return self._model
 
     @property

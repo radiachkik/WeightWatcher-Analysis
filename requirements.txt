@@ -2,5 +2,8 @@ weightwatcher==0.6.1
 tensorflow==2.10.0
 tqdm==4.64.1
 keras~=2.10.0
-pillow==8.3.2
-efficientnet==1.1.1
+pandas~=1.5.1
+efficientnet~=1.1.1
+plotly~=5.11.0
+numpy~=1.23.4
+statsmodels
