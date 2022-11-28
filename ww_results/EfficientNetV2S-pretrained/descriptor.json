@@ -1,0 +1,9 @@
+{
+    "id": "EfficientNetV2S-pretrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "EfficientNetV2",
+        "ModelTag.VARIANT": "S",
+        "ModelTag.PRETRAINED": true,
+        "ModelTag.ACCURACY": 83.9
+    }
+}

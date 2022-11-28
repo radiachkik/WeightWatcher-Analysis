@@ -1,0 +1,9 @@
+{
+    "id": "ConvNeXtXLarge-pretrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "ConvNeXt",
+        "ModelTag.VARIANT": "XLarge",
+        "ModelTag.PRETRAINED": true,
+        "ModelTag.ACCURACY": 85.5
+    }
+}

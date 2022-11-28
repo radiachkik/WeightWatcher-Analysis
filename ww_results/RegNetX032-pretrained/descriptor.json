@@ -1,0 +1,9 @@
+{
+    "id": "RegNetX032-pretrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "RegNetX",
+        "ModelTag.VARIANT": "X032",
+        "ModelTag.PRETRAINED": true,
+        "ModelTag.ACCURACY": 78.3
+    }
+}

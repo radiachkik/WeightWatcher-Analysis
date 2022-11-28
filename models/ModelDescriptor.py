@@ -12,3 +12,4 @@ class ModelDescriptor:
 
     def __hash__(self):
         return self.id.__hash__()
+

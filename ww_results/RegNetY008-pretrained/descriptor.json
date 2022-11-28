@@ -1,0 +1,9 @@
+{
+    "id": "RegNetY008-pretrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "RegNetY",
+        "ModelTag.VARIANT": "Y008",
+        "ModelTag.PRETRAINED": true,
+        "ModelTag.ACCURACY": 76.3
+    }
+}

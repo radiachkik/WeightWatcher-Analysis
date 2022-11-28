@@ -1,0 +1,9 @@
+{
+    "id": "EfficientNetB6-pretrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "EfficientNet",
+        "ModelTag.VARIANT": "B6",
+        "ModelTag.PRETRAINED": true,
+        "ModelTag.ACCURACY": 84.1
+    }
+}

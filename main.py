@@ -3,6 +3,7 @@ from typing import List
 
 import plotly.graph_objects as go
 
+from application import AnalyzeService
 from models import ModelQueryService, configure_cpu, ModelTag
 from hardcoded_models import register_hardcoded_models
 from visualization import PlottingService, DashboardService, FigureConfiguration, PlotConfiguration, \
@@ -31,18 +32,15 @@ def show_all_plots():
 def continue_analyzing_hardcoded_models():
     logging.basicConfig(level=logging.INFO)
     configure_cpu()
+
     register_hardcoded_models(pretrained=True)
     register_hardcoded_models(pretrained=False)
-
-    ww_result_repository = WWResultRepository('ww_results')
-    analyzed_descriptors = [result.model_descriptor for result in ww_result_repository.get_all()]
-
     model_query_service = ModelQueryService()
     model_wrappers = model_query_service.get_all()
-    filtered_model_wrappers = [wrapper for wrapper in model_wrappers if wrapper.descriptor not in analyzed_descriptors]
 
-    ww_service = WWService()
-    ww_service.analyze_models(filtered_model_wrappers, ww_result_repository)
+    ww_result_repository = WWResultRepository('ww_results')
+
+    ww_results = AnalyzeService.continue_analyzing(model_wrappers, ww_result_repository)
 
 
 def show_plot():
