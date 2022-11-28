@@ -5,10 +5,10 @@ from enum import Enum
 
 from pandas import DataFrame
 
-from models import ModelIdentification
+from models import ModelDescriptor
 
 
-class WeightWatcherDetailsColumns(Enum):
+class WWDetailsColumns(Enum):
     ACCURACY = "accuracy"
     ARCHITECTURE = "architecture"
     VARIANT = "variant"
@@ -44,7 +44,7 @@ class WeightWatcherDetailsColumns(Enum):
     XMIN = "xmin"
 
 
-class WeightWatcherSummaryColumns(Enum):
+class WWSummaryColumns(Enum):
     ACCURACY = "accuracy"
     ARCHITECTURE = "architecture"
     VARIANT = "variant"
@@ -57,8 +57,7 @@ class WeightWatcherSummaryColumns(Enum):
 
 
 @dataclass
-class WeightWatcherResult:
-    model_identification: ModelIdentification
-    model_accuracy: float
+class WWResult:
+    model_descriptor: ModelDescriptor
     summary: DataFrame
     details: DataFrame

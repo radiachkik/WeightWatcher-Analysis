@@ -4,14 +4,14 @@ from typing import List
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
-from weight_watcher import WeightWatcherResult, WeightWatcherResultService
+from ww import WWResult, WWResultService
 
 
 class CorrelationService:
     @staticmethod
-    def train_random_forest_on_summary_and_accuracy(analysis_results: List[WeightWatcherResult]):
+    def train_random_forest_on_summary_and_accuracy(analysis_results: List[WWResult]):
         logging.log(logging.INFO, f"Training random forest regressor...")
-        metrics = WeightWatcherResultService.extract_summary_metrics(analysis_results)
+        metrics = WWResultService.extract_summary_metrics(analysis_results)
         dataframe = pd.DataFrame.from_dict(metrics)
         split_index = len(dataframe) // 2
         train_x, test_x = dataframe[:split_index], dataframe[split_index:]

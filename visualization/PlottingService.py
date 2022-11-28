@@ -7,34 +7,34 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
 
-from weight_watcher import WeightWatcherResult, WeightWatcherDetailsColumns, WeightWatcherSummaryColumns
+from ww import WWResult, WWDetailsColumns, WWSummaryColumns
 
 RELEVANT_DETAILS_COLUMNS = [
-    WeightWatcherDetailsColumns.ALPHA.value,
-    WeightWatcherDetailsColumns.ALPHA_WEIGHTED.value,
-    WeightWatcherDetailsColumns.LOG_ALPHA_NORM.value,
-    WeightWatcherDetailsColumns.NORM.value,
-    WeightWatcherDetailsColumns.LOG_NORM.value,
-    WeightWatcherDetailsColumns.SPECTRAL_NORM.value,
-    WeightWatcherDetailsColumns.LOG_SPECTRAL_NORM.value,
-    WeightWatcherDetailsColumns.D.value,
-    WeightWatcherDetailsColumns.N.value,
-    WeightWatcherDetailsColumns.SIGMA.value,
-    WeightWatcherDetailsColumns.STABLE_RANK.value,
-    WeightWatcherDetailsColumns.NUM_PL_SPIKES.value,
-    WeightWatcherDetailsColumns.LAMBDA_MAX.value,
-    WeightWatcherDetailsColumns.SV_MAX.value,
-    WeightWatcherDetailsColumns.XMAX.value,
-    WeightWatcherDetailsColumns.XMIN.value,
+    WWDetailsColumns.ALPHA.value,
+    WWDetailsColumns.ALPHA_WEIGHTED.value,
+    WWDetailsColumns.LOG_ALPHA_NORM.value,
+    WWDetailsColumns.NORM.value,
+    WWDetailsColumns.LOG_NORM.value,
+    WWDetailsColumns.SPECTRAL_NORM.value,
+    WWDetailsColumns.LOG_SPECTRAL_NORM.value,
+    WWDetailsColumns.D.value,
+    WWDetailsColumns.N.value,
+    WWDetailsColumns.SIGMA.value,
+    WWDetailsColumns.STABLE_RANK.value,
+    WWDetailsColumns.NUM_PL_SPIKES.value,
+    WWDetailsColumns.LAMBDA_MAX.value,
+    WWDetailsColumns.SV_MAX.value,
+    WWDetailsColumns.XMAX.value,
+    WWDetailsColumns.XMIN.value,
 ]
 
 RELEVANT_SUMMARY_COLUMNS = [
-    WeightWatcherSummaryColumns.LOG_NORM.value,
-    WeightWatcherSummaryColumns.ALPHA.value,
-    WeightWatcherSummaryColumns.ALPHA_WEIGHTED.value,
-    WeightWatcherSummaryColumns.LOG_ALPHA_NORM.value,
-    WeightWatcherSummaryColumns.LOG_SPECTRAL_NORM.value,
-    WeightWatcherSummaryColumns.STABLE_RANK.value,
+    WWSummaryColumns.LOG_NORM.value,
+    WWSummaryColumns.ALPHA.value,
+    WWSummaryColumns.ALPHA_WEIGHTED.value,
+    WWSummaryColumns.LOG_ALPHA_NORM.value,
+    WWSummaryColumns.LOG_SPECTRAL_NORM.value,
+    WWSummaryColumns.STABLE_RANK.value,
 ]
 
 COLUMNS_SUMMARY_FIGURE = 1
@@ -45,7 +45,7 @@ COLORS = px.colors.qualitative.Plotly
 
 class PlottingService:
     @staticmethod
-    def create_summaries_per_architecture_figures(results: List[WeightWatcherResult]) -> List[go.Figure]:
+    def create_summaries_per_architecture_figures(results: List[WWResult]) -> List[go.Figure]:
         figures = []
         for architecture_name, architecture_results in PlottingService.group_results_by_architecture(results).items():
             fig = PlottingService.create_summaries_figure(
@@ -59,7 +59,7 @@ class PlottingService:
 
     @staticmethod
     def create_summaries_figure(
-            results: List[WeightWatcherResult],
+            results: List[WWResult],
             group_by_architecture=True,
             group_by_variant=True,
             figure_title: str = "Summary [all]"
@@ -74,9 +74,9 @@ class PlottingService:
             for name, df in zip(names, trace_dfs):
                 scatter = go.Scatter(
                     x=df[column_key],
-                    y=df[WeightWatcherSummaryColumns.ACCURACY.value],
-                    text=df[WeightWatcherSummaryColumns.ARCHITECTURE.value] + ":" + df[WeightWatcherSummaryColumns.VARIANT.value],
-                    mode="markers+text",
+                    y=df[WWSummaryColumns.ACCURACY.value],
+                    text=df[WWSummaryColumns.ARCHITECTURE.value] + ":" + df[WWSummaryColumns.VARIANT.value],
+                    mode="markers+text+lines",
                     marker=dict(
                         size=10,
                     ),
@@ -93,7 +93,7 @@ class PlottingService:
         return fig
 
     @staticmethod
-    def create_details_per_architecture_figures(results: List[WeightWatcherResult]) -> List[go.Figure]:
+    def create_details_per_architecture_figures(results: List[WWResult]) -> List[go.Figure]:
         figures = []
         for architecture_name, architecture_results in PlottingService.group_results_by_architecture(results).items():
             fig = PlottingService.create_details_figure(
@@ -107,7 +107,7 @@ class PlottingService:
         return figures
 
     @staticmethod
-    def create_details_per_model_figures(results: List[WeightWatcherResult]) -> List[go.Figure]:
+    def create_details_per_model_figures(results: List[WWResult]) -> List[go.Figure]:
         figures = []
         for result in results:
             fig = PlottingService.create_details_figure(
@@ -115,14 +115,14 @@ class PlottingService:
                 lines=True,
                 group_by_architecture=True,
                 group_by_variant=True,
-                figure_title=f"Details [{result.model_identification}]"
+                figure_title=f"Details [{result.model_descriptor}]"
             )
             figures.append(fig)
         return figures
 
     @staticmethod
     def create_details_figure(
-            results: List[WeightWatcherResult],
+            results: List[WWResult],
             lines: bool = False,
             group_by_architecture=True,
             group_by_variant=True,
@@ -138,10 +138,10 @@ class PlottingService:
 
             for name, df in zip(names, trace_dfs):
                 scatter = go.Scatter(
-                    x=df[WeightWatcherDetailsColumns.LAYER_ID.value],
+                    x=df[WWDetailsColumns.LAYER_ID.value],
                     y=df[metric_key],
-                    text=df[WeightWatcherDetailsColumns.ARCHITECTURE.value] + ":" + df[
-                        WeightWatcherDetailsColumns.VARIANT.value],
+                    text=df[WWDetailsColumns.ARCHITECTURE.value] + ":" + df[
+                        WWDetailsColumns.VARIANT.value],
                     mode="markers+lines" if lines else "markers",
                     marker=dict(
                         size=4,
@@ -154,16 +154,16 @@ class PlottingService:
                 fig.add_trace(scatter, row=row, col=col)
                 fig.update_yaxes(title_text=metric_key, row=row, col=col)
 
-            fig.update_xaxes(title_text=WeightWatcherDetailsColumns.LAYER_ID.value)
+            fig.update_xaxes(title_text=WWDetailsColumns.LAYER_ID.value)
             fig.update_layout(title_text=figure_title, height=rows * 400)
             fig.update_traces(textposition='top center')
         return fig
 
     @staticmethod
-    def group_results_by_architecture(results: List[WeightWatcherResult]) -> Dict[str, List[WeightWatcherResult]]:
+    def group_results_by_architecture(results: List[WWResult]) -> Dict[str, List[WWResult]]:
         architectures = {}
         for result in results:
-            architecture_name = result.model_identification.architecture.name
+            architecture_name = result.model_descriptor.architecture.id
             if architecture_name not in architectures:
                 architectures[architecture_name] = []
             architectures[architecture_name].append(result)
@@ -174,7 +174,7 @@ class PlottingService:
         names = ["all"]
         trace_dfs = [df]
         if group_by_architecture:
-            architecture_groups = df.groupby(WeightWatcherDetailsColumns.ARCHITECTURE.value)
+            architecture_groups = df.groupby(WWDetailsColumns.ARCHITECTURE.value)
             trace_dfs = [architecture_group[1] for architecture_group in architecture_groups]
             names = [architecture_group[0] for architecture_group in architecture_groups]
 
@@ -182,7 +182,7 @@ class PlottingService:
             new_trace_dfs = []
             variant_names = []
             for group_name, trace_df in zip(names, trace_dfs):
-                variant_groups = trace_df.groupby(WeightWatcherDetailsColumns.VARIANT.value)
+                variant_groups = trace_df.groupby(WWDetailsColumns.VARIANT.value)
                 new_trace_dfs += [variant_group[1] for variant_group in variant_groups]
                 variant_names += [f"{group_name}:{variant_group[0]}" if group_by_architecture else variant_group[0] for
                                   variant_group in variant_groups]
