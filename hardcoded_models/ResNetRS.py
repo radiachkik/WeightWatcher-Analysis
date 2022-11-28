@@ -17,8 +17,8 @@ class ResNetRSVariant(Enum):
 
 ResNetRSTop1Accuracy: Dict[ResNetRSVariant, float] = {
     ResNetRSVariant.RS50: 78.8,
-    ResNetRSVariant.RS101: 81.2,  # 82.8 corresponds to image resolution 192 (80.3 with 160)
-    ResNetRSVariant.RS152: 83.0,  # 82.8 corresponds to image resolution 256 (82.8 with 224)
+    ResNetRSVariant.RS101: 81.2,  # corresponds to image resolution 192 (80.3 with 160)
+    ResNetRSVariant.RS152: 83.0,  # corresponds to image resolution 256 (82.8 with 224)
     ResNetRSVariant.RS200: 83.4,
     ResNetRSVariant.RS270: 83.8,
     ResNetRSVariant.RS350: 84.0,

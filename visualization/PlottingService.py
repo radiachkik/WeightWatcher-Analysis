@@ -7,6 +7,7 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly.graph_objects as go
 
+from visualization import PlotConfiguration, FigureConfiguration
 from ww import WWResult, WWDetailsColumns, WWSummaryColumns
 
 RELEVANT_DETAILS_COLUMNS = [
@@ -56,6 +57,49 @@ class PlottingService:
             )
             figures.append(fig)
         return figures
+
+    @staticmethod
+    def create_scatter_plot(results: List[WWResult], plot_config: PlotConfiguration) -> go.Scatter:
+        results = [result for result in results if plot_config.model_group.selector(result)]
+        x_data = [plot_config.x_data_selector(result) for result in results]
+        y_data = [plot_config.y_data_selector(result) for result in results]
+        text_data = [plot_config.text_data_selector(result) for result in results] if plot_config.text else None
+
+        modes = []
+        if plot_config.markers:
+            modes.append("markers")
+        if plot_config.text:
+            modes.append("text")
+        if plot_config.lines:
+            modes.append("lines")
+        mode = "+".join(modes)
+        scatter = go.Scatter(
+            x=x_data,
+            y=y_data,
+            text=text_data,
+            mode=mode,
+            marker=dict(
+                size=plot_config.marker_size,
+            ) if plot_config.marker_size is not None else None,
+            legendgroup=plot_config.legend_group,
+            legendgrouptitle={"text": plot_config.legend_group},
+            name=plot_config.plot_name,
+            showlegend=True,
+        )
+        return scatter
+
+    @staticmethod
+    def create_figure(results: List[WWResult], fig_config: FigureConfiguration):
+        fig = make_subplots(rows=fig_config.num_rows, cols=fig_config.num_cols)
+        for plot_config, row, col in zip(fig_config.plot_configs, fig_config.row_indices, fig_config.col_indices):
+            scatter = PlottingService.create_scatter_plot(results, plot_config)
+            fig.add_trace(scatter, row=row, col=col)
+            fig.update_xaxes(title_text=plot_config.x_axis_title, row=row, col=col)
+            fig.update_yaxes(title_text=plot_config.y_axis_title, row=row, col=col)
+
+        fig.update_layout(title_text=fig_config.figure_name, height=fig_config.height, width=fig_config.width)
+        fig.update_traces(textposition='top center')
+        return fig
 
     @staticmethod
     def create_summaries_figure(
@@ -171,6 +215,28 @@ class PlottingService:
 
     @staticmethod
     def split_dataframe(df: DataFrame, group_by_architecture: bool, group_by_variant: bool):
+        names = ["all"]
+        trace_dfs = [df]
+        if group_by_architecture:
+            architecture_groups = df.groupby(WWDetailsColumns.ARCHITECTURE.value)
+            trace_dfs = [architecture_group[1] for architecture_group in architecture_groups]
+            names = [architecture_group[0] for architecture_group in architecture_groups]
+
+        if group_by_variant:
+            new_trace_dfs = []
+            variant_names = []
+            for group_name, trace_df in zip(names, trace_dfs):
+                variant_groups = trace_df.groupby(WWDetailsColumns.VARIANT.value)
+                new_trace_dfs += [variant_group[1] for variant_group in variant_groups]
+                variant_names += [f"{group_name}:{variant_group[0]}" if group_by_architecture else variant_group[0] for
+                                  variant_group in variant_groups]
+            trace_dfs = new_trace_dfs
+            names = variant_names
+
+        return names, trace_dfs
+
+    @staticmethod
+    def split_df(df: DataFrame, group_by_architecture: bool, group_by_variant: bool):
         names = ["all"]
         trace_dfs = [df]
         if group_by_architecture:
