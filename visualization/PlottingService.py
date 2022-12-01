@@ -60,7 +60,7 @@ class PlottingService:
 
     @staticmethod
     def create_scatter_plot(results: List[WWResult], plot_config: PlotConfiguration) -> go.Scatter:
-        results = [result for result in results if plot_config.model_group.selector(result)]
+        results = [result for result in results if plot_config.result_selector(result)]
         x_data = [plot_config.x_data_selector(result) for result in results]
         y_data = [plot_config.y_data_selector(result) for result in results]
         text_data = [plot_config.text_data_selector(result) for result in results] if plot_config.text else None
@@ -91,13 +91,15 @@ class PlottingService:
     @staticmethod
     def create_figure(results: List[WWResult], fig_config: FigureConfiguration):
         fig = make_subplots(rows=fig_config.num_rows, cols=fig_config.num_cols)
-        for plot_config, row, col in zip(fig_config.plot_configs, fig_config.row_indices, fig_config.col_indices):
+        for index, plot_config in enumerate(fig_config.plot_configs):
+            col_index = index % fig_config.num_cols + 1
+            row_index = index // fig_config.num_cols + 1
             scatter = PlottingService.create_scatter_plot(results, plot_config)
-            fig.add_trace(scatter, row=row, col=col)
-            fig.update_xaxes(title_text=plot_config.x_axis_title, row=row, col=col)
-            fig.update_yaxes(title_text=plot_config.y_axis_title, row=row, col=col)
+            fig.add_trace(scatter, col=col_index, row=row_index)
+            fig.update_xaxes(title_text=plot_config.x_axis_title, col=col_index, row=row_index)
+            fig.update_yaxes(title_text=plot_config.y_axis_title, col=col_index, row=row_index)
 
-        fig.update_layout(title_text=fig_config.figure_name, height=fig_config.height, width=fig_config.width)
+        fig.update_layout(title_text=fig_config.figure_name, height=fig_config.height)
         fig.update_traces(textposition='top center')
         return fig
 

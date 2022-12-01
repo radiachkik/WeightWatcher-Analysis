@@ -12,7 +12,7 @@ from models import ModelWrapper
 class WWService:
     def __init__(self, log_level=logging.WARNING):
         self._log_level = log_level
-        self._weight_watcher = ww.WeightWatcher(log_level=log_level)
+        self._weight_watcher = ww.WeightWatcher(log_level=logging.DEBUG)
 
     def analyze_model(self, model_wrapper: ModelWrapper, result_repository: Optional[WWResultRepository] = None) -> Optional[WWResult]:
         logging.log(logging.INFO, f"Analyzing {model_wrapper.descriptor.id}...")
@@ -34,7 +34,11 @@ class WWService:
                 results.append(result)
         return results
 
+    def get_summary_from_details(self, details):
+        return pandas.DataFrame(self._weight_watcher.get_summary(details), index=[0])
+
     def _get_details_and_summary(self, model_wrapper: ModelWrapper) -> WWResult:
+        self._weight_watcher.a
         details = self._weight_watcher.analyze(model=model_wrapper.model)
         summary = pandas.DataFrame(self._weight_watcher.get_summary(details), index=[0])
         return WWResult(model_wrapper.descriptor, summary, details)

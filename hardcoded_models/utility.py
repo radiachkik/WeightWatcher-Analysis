@@ -17,5 +17,5 @@ def register_hardcoded_models(pretrained: bool):
         register_regnety_models,
         register_resnetrs_models
     ]
-    for cb in tqdm(registration_callbacks, desc="Register hardcoded models..."):
+    for cb in registration_callbacks:
         cb(pretrained)

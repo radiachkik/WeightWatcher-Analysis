@@ -28,8 +28,8 @@ class WWResultRepository:
     def get(self, model_id: str) -> WWResult:
         base_path = self._get_results_base_path(model_id)
         try:
-            details = pandas.read_csv(os.path.join(base_path, "details.csv"))
-            summary = pandas.read_csv(os.path.join(base_path, "summary.csv"))
+            details = pandas.read_csv(os.path.join(base_path, "details.csv"), index_col=0)
+            summary = pandas.read_csv(os.path.join(base_path, "summary.csv"), index_col=0)
             with open(os.path.join(base_path, "descriptor.json")) as descriptor_file:
                 descriptor = ModelDescriptor(**json.load(descriptor_file))
         except FileNotFoundError:

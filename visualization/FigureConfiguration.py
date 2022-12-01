@@ -10,7 +10,4 @@ class FigureConfiguration:
     num_rows: int
     num_cols: int
     plot_configs: List[PlotConfiguration]
-    row_indices: List[int]
-    col_indices: List[int]
-    height: int
     width: int

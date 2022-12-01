@@ -1,5 +1,3 @@
-import argparse
-import logging
 from dataclasses import dataclass
 
 
@@ -7,7 +5,7 @@ from dataclasses import dataclass
 class AnalyseHardcodedModelsOptions:
     resume: bool
     include_untrained: bool
-    result_directory: str
+    results_directory: str
 
 
 def main(options: AnalyseHardcodedModelsOptions):
@@ -15,8 +13,9 @@ def main(options: AnalyseHardcodedModelsOptions):
     from hardcoded_models import register_hardcoded_models
     from models import configure_cpu, ModelQueryService
     from ww import WWResultRepository
+    import logging
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     configure_cpu()
 
     register_hardcoded_models(pretrained=True)
@@ -25,7 +24,8 @@ def main(options: AnalyseHardcodedModelsOptions):
 
     model_query_service = ModelQueryService()
     model_wrappers = model_query_service.get_all()
-    ww_result_repository = WWResultRepository(options.result_directory)
+    ww_result_repository = WWResultRepository(options.results_directory)
+    AnalyzeService.recalculate_all_summaries(ww_result_repository)
     if options.resume:
         AnalyzeService.resume_analyzing(model_wrappers, ww_result_repository)
     else:
@@ -33,8 +33,9 @@ def main(options: AnalyseHardcodedModelsOptions):
 
 
 def parse_arguments() -> AnalyseHardcodedModelsOptions:
-    parser = argparse.ArgumentParser(description='Analyze hardcoded models')
+    import argparse
 
+    parser = argparse.ArgumentParser(description='Analyze hardcoded models')
     parser.add_argument(
         "-r",
         "--resume",
@@ -57,7 +58,7 @@ def parse_arguments() -> AnalyseHardcodedModelsOptions:
     options = AnalyseHardcodedModelsOptions(
         resume=args.resume,
         include_untrained=args.untrained,
-        result_directory=args.output
+        results_directory=args.output
     )
     return options
 

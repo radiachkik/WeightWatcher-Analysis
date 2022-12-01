@@ -1,5 +1,7 @@
 from typing import List
 
+from tqdm import tqdm
+
 from models import ModelWrapper
 from ww import WWResultRepository, WWService, WWResult
 
@@ -9,6 +11,17 @@ class AnalyzeService:
     def analyze(model_wrappers: List[ModelWrapper], ww_result_repository: WWResultRepository) -> List[WWResult]:
         ww_service = WWService()
         results = ww_service.analyze_models(model_wrappers, ww_result_repository)
+        return results
+
+    @staticmethod
+    def recalculate_all_summaries(ww_result_repository: WWResultRepository) -> List[WWResult]:
+        ww_service = WWService()
+        results = ww_result_repository.get_all()
+        for result in tqdm(results, unit="result"):
+            new_summary = ww_service.get_summary_from_details(result.details)
+            result.summary = new_summary
+            ww_result_repository.add(result)
+
         return results
 
     @staticmethod
