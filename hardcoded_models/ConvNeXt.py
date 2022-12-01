@@ -26,7 +26,7 @@ ConvNeXtTop1Accuracy: Dict[ConvNeXtVariant, float] = {
 def register_convnext_models(pretrained: bool):
     model_registry = ModelRegistry.instance()
     for variant in ConvNeXtVariant:
-        identification = "ConvNeXt" + variant.name + "-pretrained" if pretrained else "-untrained"
+        identification = "ConvNeXt" + variant.name + ("-pretrained" if pretrained else "-untrained")
         name = "ConvNeXt" + variant.name
         model_descriptor = ModelDescriptor(
             id=identification,

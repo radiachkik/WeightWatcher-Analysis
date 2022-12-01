@@ -1,0 +1,9 @@
+{
+    "id": "ResNetRS152-pretrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "ResNetRS",
+        "ModelTag.VARIANT": "RS152",
+        "ModelTag.PRETRAINED": true,
+        "ModelTag.ACCURACY": 83.0
+    }
+}

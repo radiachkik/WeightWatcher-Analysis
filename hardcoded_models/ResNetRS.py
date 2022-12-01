@@ -29,7 +29,7 @@ ResNetRSTop1Accuracy: Dict[ResNetRSVariant, float] = {
 def register_resnetrs_models(pretrained: bool):
     model_registry = ModelRegistry.instance()
     for variant in ResNetRSVariant:
-        identification = "ResNet" + variant.name + "-pretrained" if pretrained else "-untrained"
+        identification = "ResNet" + variant.name + ("-pretrained" if pretrained else "-untrained")
         name = "ResNet" + variant.name
         model_descriptor = ModelDescriptor(
             id=identification,

@@ -32,7 +32,7 @@ EfficientNetTop1Accuracy: Dict[EfficientNetVariant, float] = {
 def register_efficientnet_models(pretrained: bool):
     model_registry = ModelRegistry.instance()
     for variant in EfficientNetVariant:
-        identification = "EfficientNet" + variant.name + "-pretrained" if pretrained else "-untrained"
+        identification = "EfficientNet" + variant.name + ("-pretrained" if pretrained else "-untrained")
         name = "EfficientNet" + variant.name
         model_descriptor = ModelDescriptor(
             id=identification,

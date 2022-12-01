@@ -40,7 +40,7 @@ RegNetXTop1Accuracy: Dict[RegNetXVariant, float] = {
 def register_regnetx_models(pretrained: bool):
     model_registry = ModelRegistry.instance()
     for variant in RegNetXVariant:
-        identification = "RegNet" + variant.name + "-pretrained" if pretrained else "-untrained"
+        identification = "RegNet" + variant.name + ("-pretrained" if pretrained else "-untrained")
         name = "RegNet" + variant.name
         model_descriptor = ModelDescriptor(
             id=identification,

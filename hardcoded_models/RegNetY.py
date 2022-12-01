@@ -40,7 +40,7 @@ RegNetYTop1Accuracy: Dict[RegNetYVariant, float] = {
 def register_regnety_models(pretrained: bool):
     model_registry = ModelRegistry.instance()
     for variant in RegNetYVariant:
-        identification = "RegNet" + variant.name + "-pretrained" if pretrained else "-untrained"
+        identification = "RegNet" + variant.name + ("-pretrained" if pretrained else "-untrained")
         name = "RegNet" + variant.name
         model_descriptor = ModelDescriptor(
             id=identification,
