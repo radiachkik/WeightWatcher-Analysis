@@ -50,7 +50,7 @@ def parse_arguments() -> AnalyseHardcodedModelsOptions:
     parser.add_argument(
         "-o",
         "--output",
-        required=True,
+        default="ww_results",
         help="Output folder to store the results in"
     )
     args = parser.parse_args()
