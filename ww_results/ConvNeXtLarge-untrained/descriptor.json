@@ -1,0 +1,9 @@
+{
+    "id": "ConvNeXtLarge-untrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "ConvNeXt",
+        "ModelTag.VARIANT": "Large",
+        "ModelTag.PRETRAINED": false,
+        "ModelTag.ACCURACY": 84.3
+    }
+}

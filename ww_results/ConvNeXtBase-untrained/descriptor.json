@@ -1,0 +1,9 @@
+{
+    "id": "ConvNeXtBase-untrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "ConvNeXt",
+        "ModelTag.VARIANT": "Base",
+        "ModelTag.PRETRAINED": false,
+        "ModelTag.ACCURACY": 83.8
+    }
+}

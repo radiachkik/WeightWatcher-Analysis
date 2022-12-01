@@ -1,0 +1,9 @@
+{
+    "id": "EfficientNetV2M-untrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "EfficientNetV2",
+        "ModelTag.VARIANT": "M",
+        "ModelTag.PRETRAINED": false,
+        "ModelTag.ACCURACY": 85.1
+    }
+}

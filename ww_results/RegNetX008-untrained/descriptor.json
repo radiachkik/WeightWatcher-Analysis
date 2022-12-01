@@ -1,0 +1,9 @@
+{
+    "id": "RegNetX008-untrained",
+    "tags": {
+        "ModelTag.ARCHITECTURE": "RegNetX",
+        "ModelTag.VARIANT": "X008",
+        "ModelTag.PRETRAINED": false,
+        "ModelTag.ACCURACY": 75.2
+    }
+}
