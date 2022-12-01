@@ -28,21 +28,6 @@ def show_all_plots():
     dashboard_service.build_dashboard(plots)
     dashboard_service.show_dashboard(True)
 
-
-def continue_analyzing_hardcoded_models():
-    logging.basicConfig(level=logging.INFO)
-    configure_cpu()
-
-    register_hardcoded_models(pretrained=True)
-    register_hardcoded_models(pretrained=False)
-    model_query_service = ModelQueryService()
-    model_wrappers = model_query_service.get_all()
-
-    ww_result_repository = WWResultRepository('ww_results')
-
-    ww_results = AnalyzeService.continue_analyzing(model_wrappers, ww_result_repository)
-
-
 def show_plot():
     plotting_service = PlottingService()
     dashboard_service = DashboardService()
@@ -98,7 +83,7 @@ def show_plot():
 
 
 def main():
-    continue_analyzing_hardcoded_models()
+    show_plot()
 
 
 if __name__ == '__main__':
